@@ -8,9 +8,7 @@
 //===============================
 
 
-
-var foodData;
-var eventData;
+var cardsChosen = [];
 
 var currentFood = "";
 var currentEvent = "";
@@ -27,7 +25,7 @@ var yelpSecret = "VA711YCfZC8tzofZWEhAVGkUOVHI0TbeddWinQzP9kAkKBrEtaRo9f9EDDGyS6
 	
 var corsanywhere = 'https://cors-anywhere.herokuapp.com/';
 var queryURLSearchYelp = 'https://api.yelp.com/v3/businesses/search';
-var apiKeyYelp = 'Bearer -tcLAnA2QhhU9kQ60q8FVq5k0ltA27gBPn7OJtXxqfXEFWcur_Qm-7DKZGuoM9wKAQPrYa1fDsV4yJHBSHvKdnIAZU5yAMwg_NfJXX3or92lVQQSkpvcULui1wlxWnYx'
+var apiKeyYelp = 'Bearer -tcLAnA2QhhU9kQ60q8FVq5k0ltA27gBPn7OJtXxqfXEFWcur_Qm-7DKZGuoM9wKAQPrYa1fDsV4yJHBSHvKdnIAZU5yAMwg_NfJXX3or92lVQQSkpvcULui1wlxWnYx';
 
 // Initialize Firebase
 var config = {
@@ -42,32 +40,48 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 
-var leadsRef = database.ref('leads');
-leadsRef.on('value', function(snapshot) {
-    snapshot.forEach(function(childSnapshot) {
-      var childData = childSnapshot.val();
-    });
-});
-
 
 function getsearchApi() {
-	$.ajax({
-		url: "https://cors-anywhere.herokuapp.com/" + queryURLSearchYelp,
-		"crossDomain": true,            
-		method: "GET",
-		data: {
-		location: 'Boston, Ma',
-		term: 'restaurants'
-		},
-		headers: {"Authorization" : apiKeyYelp}            
+//	//Yelp API
+//	$.ajax({
+//		url: "https://cors-anywhere.herokuapp.com/" + queryURLSearchYelp,
+//		"crossDomain": true,            
+//		method: "GET",
+//		data: {
+//		location: 'Boston, Ma',
+//		term: 'restaurants'
+//		},
+//		headers: {"Authorization" : apiKeyYelp}            
+//
+//	}).then(function(response) {
+//		console.log("Yelp Search ");
+//		console.log(response);
+//	});		
+//}
+//
+//function getsearchApiTicketMaster() {
+//	$.ajax({
+//		method:"GET",
+//		url:"https://app.ticketmaster.com/discovery/v2/events.json?size=10&apikey=VFqKbEqAQRwPLtAKW0UynnLWlq3YTFkY",
+//		async: true,
+//		// dataType: "json",
+//		data: {
+//		postalCode: '03801'
+//	}
+//
+//	}).then(function(response2) {
+//		console.log("ticketmaster Search ");
+//		console.log(response2);
+//	});
+//}
 
-	}).then(function(response) {
-		console.log("Yelp Search ");
-		console.log(response);
-	});		
-}
+database.ref().on("child_added", function(snapshot) {
+	console.log(snapshot.val());
+	//WRITE TO RECENT HERE
+});
 
-function getsearchApiTicketMaster() {
+$("#searchButton").on("click", function() {
+//	TICKET MASTER API
 	$.ajax({
 		method:"GET",
 		url:"https://app.ticketmaster.com/discovery/v2/events.json?size=10&apikey=VFqKbEqAQRwPLtAKW0UynnLWlq3YTFkY",
@@ -81,19 +95,10 @@ function getsearchApiTicketMaster() {
 		console.log("ticketmaster Search ");
 		console.log(response2);
 	});
-}
-
-leadsRef.on("child_added", function(snapshot) {
-	
-});
-
-$("#submitButton").on("click", function() {
-	
 });
 
 $("document").on("click", function() {
-	var cardChosen = $(this).attr("data-card");
-	console.log(this);
+	console.log(cardChosen);
 	console.log("You Got a Card");
-	
+	cardsChosen.append(cardChosen);
 });
