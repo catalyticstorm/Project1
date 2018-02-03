@@ -143,7 +143,7 @@ $(document).ready(function() {
 
 					var selectEventButton = $("<button class='btn waves-effect waves-light select-event' value='select' data-eventTitle=" + JSON.stringify(title) + ">Select</button>");
 					selectEventButton.attr("data-venue", JSON.stringify(venues)).attr("data-locationLine1", JSON.stringify(locationLineOne)).attr("data-locationLine2", JSON.stringify(locationLineTwo));
-					selectEventButton.attr("data-date", JSON.stringify(date)).attr("data-time", JSON.stringify(time)).attr("data-eventUrl", JSON.stringify(buyTicketsUrl));
+					selectEventButton.attr("data-date", JSON.stringify(date)).attr("data-time", JSON.stringify(time)).attr("data-eventUrl", JSON.stringify(buyTicketsUrl)).attr("data-eventImage", JSON.stringify(image));
 
 					$('.search-results').append(col.append(card.append(cardImg).append(cardContent).append(cardReveal)));
 					card.append(selectEventButton);
@@ -198,11 +198,11 @@ $(document).on("click", "#add-restaurant", function(event){
 
 
 				var col = $('<div class="col s12 m6 l3">');
-				var card = $('<div class="card small">')
+				var card = $('<div class="card ">')
 
 				
-				var cardImg = $('<div class="card-image waves-effect waves-block waves-light"><img class="activator" src="'+restaurantImage+'" ></div>');
-				var cardContent = $('<div class="card-content"><span class="card-title activator grey-text text-darken-4">'+restaurantName+'<i class="material-icons right">more_vert</i></span><p>Rating: '+restaurantRating+
+				var cardImg = $('<div class="card-image waves-effect waves-block waves-light"><img class="activator" src="'+restaurantImage+'" width="250px" height="250px"><span class="card-title activator">'+restaurantName+'</span></div>');
+				var cardContent = $('<div class="card-content"><span class="activator"><i class="material-icons right">more_vert</i></span><p>Rating: '+restaurantRating+
 					' out of 5 Stars</p><p>'+restaurantCity+', '+restaurantState+ '</p><div>');
 
 				var cardReveal = $('<div class="card-reveal restaurant-card"> <span class="card-title grey-text text-darken-4" data-restaurantName='+JSON.stringify(restaurantName)+'>'+restaurantName+
@@ -214,7 +214,7 @@ $(document).on("click", "#add-restaurant", function(event){
 				var selectRestaurantButton = $("<button class='btn waves-effect waves-light select-restaurant' value='select' data-restaurantName=" + JSON.stringify(restaurantName) + ">Select</button>");
 				selectRestaurantButton.attr("data-restaurantRating", JSON.stringify(restaurantRating)).attr("data-restaurantAddress", JSON.stringify(restaurantAddress1));
 				selectRestaurantButton.attr("data-restaurantCity", JSON.stringify(restaurantCity)).attr("data-restaurantState" , JSON.stringify(restaurantState));
-				selectRestaurantButton.attr("data-restaurantPhone", JSON.stringify(restaurantPhone)).attr("data-restaurantUrl", JSON.stringify(yelpRestaurantUrl));
+				selectRestaurantButton.attr("data-restaurantPhone", JSON.stringify(restaurantPhone)).attr("data-restaurantUrl", JSON.stringify(yelpRestaurantUrl)).attr("data-restaurantImage", JSON.stringify(restaurantImage));
 
 				//appends the cards and select buttons to the page
 				$('.search-results').append(col.append(card.append(cardImg).append(cardContent).append(cardReveal)));
