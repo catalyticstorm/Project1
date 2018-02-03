@@ -30,22 +30,38 @@
 			<div class="col-md-12">
 				<form>
 					<div class="form-group">
-						<label for="search-zip-input">Search by Zip Code</label>
-						<input class="form-control" type="text" id="event-zip-input">
+						<label for="search-zip-input">Event City</label>
+						<input class="form-control" type="text" id="event-city-input">
+						<label for="search-zip-input">State Code</label>
+						<input class="form-control" type="text" maxlength="2" id="event-state-input">
+						<label for="search-zip-input">Zip Code</label>
+						<input class="form-control" type="text" maxlength="5" id="event-zip-input">
 					<!-- <a href="searchResults.html" class="btn btn-primary" id="add-event">Search</a> -->
 					<button class="btn waves-effect waves-light" id="add-event" value="Search">Search</button>
 					</div>
 				</form>
 			</div>
 		</div>
-
+	<div class="alerts"></div>
 		<div class="row">
 			<div class="search-results">
 				<h2 class="header">Recent Searches</h2>
 				<div class="card horizontal">
 					<div class="card-stacked">
 						<div class="card-content">
-							This is where recent searches show up
+							<table class="striped">
+								<thead>
+									<tr>
+										<th>Event Name</th>
+										<th>Event Venue</th>
+										<th>Restaurant Name</th>
+										<th>Restaurant Rating (Out of 5)</th>
+										<th>Restaurant Location</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
 						</div>
 					</div>
 				</div>
