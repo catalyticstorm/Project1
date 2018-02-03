@@ -90,6 +90,7 @@ $(document).ready(function() {
 		console.log(eventZipInput);
 		// $('#event-location-input').val('');
 		$('.search-results').empty();
+		$(".restaurant-search").empty();
 
 		$.ajax({
 			method:"GET",
@@ -126,19 +127,23 @@ $(document).ready(function() {
 					
 					// var row = $('<div class="row">')
 					var col = $('<div class="col s12 m6 l3">');
-					var card = $('<div class="card">')
+					var card = $('<div class="card">');
 
-					var cardImg = $('<div class="card-image waves-effect waves-block waves-light"><img class="activator" src="'+image+'" width="250px" height="250px"></div>');
-					var cardContent = $('<div class="card-content"><span class="card-title activator grey-text text-darken-4">'+title+'<i class="material-icons right">more_vert</i></span><p>'+venues+'</p><p>'
+					// <span class="card-title activator grey-text text-darken-4">'+title+'<i class="material-icons right">more_vert</i></span>
+
+					var cardImg = $('<div class="card-image waves-effect waves-block waves-light"><img class="activator" src="'+image+'" width="250px" height="250px"><span class="card-title">'+title+'</span></div>');
+					var cardContent = $('<div class="card-content"><span class="activator grey-text text-darken-4"><i class="material-icons right">more_vert</i></span><p>'+venues+'</p><p>'
 							+locationLineTwo+'</p><p>'+date+' '+time+'</p><div>');
 
 					var cardReveal = $('<div class="card-reveal event-card"> <span class="card-title grey-text text-darken-4" data-eventTitle='+JSON.stringify(title)+'>'+title+
 							'<i class="material-icons right">close</i></span><p data-venue='+JSON.stringify(venues)+'>'+venues+'</p><p data-locationLine1='+JSON.stringify(locationLineOne)+'>'+locationLineOne+' '
-							+locationLineTwo+'</p> <p data-date='+JSON.stringify(date)+'>'+date+' '+time+'</p><p data-EventUrl='+JSON.stringify(buyTicketsUrl)+'><a href="'+buyTicketsUrl+'" target="_blank">Buy Tickets</a></p></div></div>');   
+							+locationLineTwo+'</p> <p data-date='+JSON.stringify(date)+'>'+date+' '+time+'</p><p data-eventUrl='+JSON.stringify(buyTicketsUrl)+'><a href="'+buyTicketsUrl+'" target="_blank">Buy Tickets</a></p></div></div>');   
 
 				// $('#results').append(card.append(cardImg).append(cardContent).append(cardReveal));
 
-					var selectEventButton = $("<button class='btn btn-primary' id='select-event' value='select' data-eventTitle=" + JSON.stringify(title) + ">Select</button>");
+					var selectEventButton = $("<button class='btn waves-effect waves-light select-event' value='select' data-eventTitle=" + JSON.stringify(title) + ">Select</button>");
+					selectEventButton.attr("data-venue", JSON.stringify(venues)).attr("data-locationLine1", JSON.stringify(locationLineOne)).attr("data-locationLine2", JSON.stringify(locationLineTwo));
+					selectEventButton.attr("data-date", JSON.stringify(date)).attr("data-time", JSON.stringify(time)).attr("data-eventUrl", JSON.stringify(buyTicketsUrl));
 
 					$('.search-results').append(col.append(card.append(cardImg).append(cardContent).append(cardReveal)));
 					card.append(selectEventButton);
@@ -147,7 +152,7 @@ $(document).ready(function() {
 
 				}
 				//create restaurant search button
-				$(".restaurant-search").append("<button class='btn btn-primary' id='add-restaurant' value='Next --> Restaurant Search' data-zip=" + eventZipInput + ">Next --> Restaurant Search</button>");
+				$(".restaurant-search").append("<button class='btn waves-effect waves-light' id='add-restaurant' value='Next --> Restaurant Search' data-zip=" + eventZipInput + ">Next --> Restaurant Search</button>");
 			} 	
 			else { 
 				//No search results
@@ -193,24 +198,30 @@ $(document).on("click", "#add-restaurant", function(event){
 
 
 				var col = $('<div class="col s12 m6 l3">');
-				var card = $('<div class="card">')
+				var card = $('<div class="card small">')
 
-				var cardImg = $('<div class="card-image waves-effect waves-block waves-light"><img class="activator" src="'+restaurantImage+'" width="250px" height="250px"></div>');
+				
+				var cardImg = $('<div class="card-image waves-effect waves-block waves-light"><img class="activator" src="'+restaurantImage+'" ></div>');
 				var cardContent = $('<div class="card-content"><span class="card-title activator grey-text text-darken-4">'+restaurantName+'<i class="material-icons right">more_vert</i></span><p>Rating: '+restaurantRating+
 					' out of 5 Stars</p><p>'+restaurantCity+', '+restaurantState+ '</p><div>');
 
 				var cardReveal = $('<div class="card-reveal restaurant-card"> <span class="card-title grey-text text-darken-4" data-restaurantName='+JSON.stringify(restaurantName)+'>'+restaurantName+
 					'<i class="material-icons right">close</i></span><p data-restaurantRating='+JSON.stringify(restaurantRating)+'>Rating: '+restaurantRating+' out of 5 Stars</p><p data-restaurantAddress='
-					+JSON.stringify(restaurantAddress1)+'>'+restaurantAddress1+ '</p><p data-restaurantCity='+JSON.stringify(restaurantCity)+'>'+restaurantCity+', '+restaurantState+'</p> <p data-phone='
+					+JSON.stringify(restaurantAddress1)+'>'+restaurantAddress1+ '</p><p data-restaurantCity='+JSON.stringify(restaurantCity)+'>'+restaurantCity+', '+restaurantState+'</p> <p data-restaurantPhone='
 					+JSON.stringify(restaurantPhone)+'>Phone: '+restaurantPhone+'</p><p data-restaurantUrl='+JSON.stringify(yelpRestaurantUrl)+'><a href="'+yelpRestaurantUrl+'" target="_blank">Reviews</a></p></div></div>');   
 
-				var selectRestaurantButton = $("<button class='btn btn-primary' id='select-restaurant' value='select' data-restaurantName=" + JSON.stringify(restaurantName) + ">Select</button>");
+				//creating select button under each restaurant card and setting the data atrributes to hold the values of the card. We can pass these to the database upon selection
+				var selectRestaurantButton = $("<button class='btn waves-effect waves-light select-restaurant' value='select' data-restaurantName=" + JSON.stringify(restaurantName) + ">Select</button>");
+				selectRestaurantButton.attr("data-restaurantRating", JSON.stringify(restaurantRating)).attr("data-restaurantAddress", JSON.stringify(restaurantAddress1));
+				selectRestaurantButton.attr("data-restaurantCity", JSON.stringify(restaurantCity)).attr("data-restaurantState" , JSON.stringify(restaurantState));
+				selectRestaurantButton.attr("data-restaurantPhone", JSON.stringify(restaurantPhone)).attr("data-restaurantUrl", JSON.stringify(yelpRestaurantUrl));
 
-						$('.search-results').append(col.append(card.append(cardImg).append(cardContent).append(cardReveal)));
-						card.append(selectRestaurantButton);
+				//appends the cards and select buttons to the page
+				$('.search-results').append(col.append(card.append(cardImg).append(cardContent).append(cardReveal)));
+				card.append(selectRestaurantButton);
 			}
 		}
-
+		//gets rid of restaurant search button
 		$(".restaurant-search").empty();
 		
 	});		
