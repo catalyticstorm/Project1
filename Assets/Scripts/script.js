@@ -81,10 +81,14 @@ $(document).ready(function() {
 		
 		var eventZipInput = $('#event-zip-input').val().trim();
 		
+		var cityInput = $('#event-city-input').val().trim();
+		var stateInput = $('#event-state-input').val().trim();
+		
 		console.log(eventZipInput);
 		// $('#event-location-input').val('');
 		$('.search-results').empty();
 		$(".restaurant-search").empty();
+		$(".alerts").empty();
 
 		$.ajax({
 			method:"GET",
@@ -94,6 +98,8 @@ $(document).ready(function() {
 				 radius: "25",
 				 unit: 'miles',
 				postalCode: eventZipInput,
+				city: cityInput,
+				stateCode: stateInput
 			}
 
 		}).then(function(response2) {
@@ -115,7 +121,8 @@ $(document).ready(function() {
 					var buyTicketsUrl = response2._embedded.events[i].url;
 					var venues = response2._embedded.events[i]._embedded.venues["0"].name;						
 					var locationLineOne = response2._embedded.events[i]._embedded.venues["0"].address.line1;
-					var locationLineTwo = response2._embedded.events[i]._embedded.venues["0"].address.line2;
+					var locationCity = response2._embedded.events[i]._embedded.venues["0"].city.name;
+					var locationState = response2._embedded.events[i]._embedded.venues["0"].state.stateCode;
 					var date =	moment(response2._embedded.events[i].dates.start.localDate, "YYYY-MM-DD").format("MM/DD/YY");
 					var time = moment(response2._embedded.events[i].dates.start.localTime, "hh:mm:ss").format("hh:mm a");
 					
@@ -127,16 +134,16 @@ $(document).ready(function() {
 
 					var cardImg = $('<div class="card-image waves-effect waves-block waves-light"><img class="activator" src="'+image+'" width="250px" height="250px"><span class="card-title">'+title+'</span></div>');
 					var cardContent = $('<div class="card-content"><span class="activator grey-text text-darken-4"><i class="material-icons right">more_vert</i></span><p>'+venues+'</p><p>'
-							+locationLineTwo+'</p><p>'+date+' '+time+'</p><div>');
+							+locationCity+ ', ' + locationState + '</p><p>'+date+' '+time+'</p><div>');
 
 					var cardReveal = $('<div class="card-reveal event-card"> <span class="card-title grey-text text-darken-4" data-eventTitle='+JSON.stringify(title)+'>'+title+
 							'<i class="material-icons right">close</i></span><p data-venue='+JSON.stringify(venues)+'>'+venues+'</p><p data-locationLine1='+JSON.stringify(locationLineOne)+'>'+locationLineOne+' '
-							+locationLineTwo+'</p> <p data-date='+JSON.stringify(date)+'>'+date+' '+time+'</p><p data-eventUrl='+JSON.stringify(buyTicketsUrl)+'><a href="'+buyTicketsUrl+'" target="_blank">Buy Tickets</a></p></div></div>');   
+							+locationCity + ', ' + locationState +'</p> <p data-date='+JSON.stringify(date)+'>'+date+' '+time+'</p><p data-eventUrl='+JSON.stringify(buyTicketsUrl)+'><a href="'+buyTicketsUrl+'" target="_blank">Buy Tickets</a></p></div></div>');   
 
 				// $('#results').append(card.append(cardImg).append(cardContent).append(cardReveal));
 
 					var selectEventButton = $("<button class='btn waves-effect waves-light select-event' value='select' data-eventTitle=" + JSON.stringify(title) + ">Select</button>");
-					selectEventButton.attr("data-venue", JSON.stringify(venues)).attr("data-locationLine1", JSON.stringify(locationLineOne)).attr("data-locationLine2", JSON.stringify(locationLineTwo));
+					selectEventButton.attr("data-venue", JSON.stringify(venues)).attr("data-locationLine1", JSON.stringify(locationLineOne));
 					selectEventButton.attr("data-date", JSON.stringify(date)).attr("data-time", JSON.stringify(time)).attr("data-eventUrl", JSON.stringify(buyTicketsUrl)).attr("data-eventImage", JSON.stringify(image));
 
 					$('.search-results').append(col.append(card.append(cardImg).append(cardContent).append(cardReveal)));
@@ -146,7 +153,7 @@ $(document).ready(function() {
 
 				}
 				//create restaurant search button
-				$(".restaurant-search").append("<button class='btn waves-effect waves-light' id='add-restaurant' value='Next --> Restaurant Search' data-zip=" + eventZipInput + ">Next --> Restaurant Search</button>");
+				$(".restaurant-search").append("<button class='btn waves-effect waves-light' id='add-restaurant' value='Next --> Restaurant Search' data-city=" + cityInput + " data-state=" + stateInput + " data-zip=" + eventZipInput + ">Next --> Restaurant Search</button>");
 		}
 			else { 
 				//No search results
@@ -175,14 +182,16 @@ $(document).ready(function() {
 $(document).on("click", "#add-restaurant", function(event){
 	$(".alerts").empty();
 	var restaurantZipInput = $("#add-restaurant").attr("data-zip");
+	var restaurantCityInput = $("#add-restaurant").attr("data-city");
+	var restaurantStateInput = $("#add-restaurant").attr("data-state");
 
 	//Yelp API
 	$.ajax({
 		url: "https://cors-anywhere.herokuapp.com/" + queryURLSearchYelp,
-		"crossDomain": true,            
+		"crossDomain": true,
 		method: "GET",
 		data: {
-		location: restaurantZipInput,
+		location: restaurantCityInput + ', ' + restaurantStateInput + ' ' + restaurantZipInput,
 		term: 'restaurants'
 		},
 		headers: {"Authorization" : apiKeyYelp}            
