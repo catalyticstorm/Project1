@@ -48,47 +48,34 @@ var apiKeyYelp = 'Bearer -tcLAnA2QhhU9kQ60q8FVq5k0ltA27gBPn7OJtXxqfXEFWcur_Qm-7D
  var database = firebase.database();
 
 
-// function getsearchApi() {
-//	//Yelp API
-//	$.ajax({
-//		url: "https://cors-anywhere.herokuapp.com/" + queryURLSearchYelp,
-//		"crossDomain": true,            
-//		method: "GET",
-//		data: {
-//		location: 'Boston, Ma',
-//		term: 'restaurants'
-//		},
-//		headers: {"Authorization" : apiKeyYelp}            
-//
-//	}).then(function(response) {
-//		console.log("Yelp Search ");
-//		console.log(response);
-//	});		
-//}
-//
-//function getsearchApiTicketMaster() {
-//	$.ajax({
-//		method:"GET",
-//		url:"https://app.ticketmaster.com/discovery/v2/events.json?size=10&apikey=VFqKbEqAQRwPLtAKW0UynnLWlq3YTFkY",
-//		async: true,
-//		// dataType: "json",
-//		data: {
-//		postalCode: '03801'
-//	}
-//
-//	}).then(function(response2) {
-//		console.log("ticketmaster Search ");
-//		console.log(response2);
-//	});
-//}
+
 
 $(document).ready(function() { 
 
-// database.ref().on("child_added", function(snapshot) {
-// 	console.log(snapshot.val());
-// 	//WRITE TO RECENT HERE
-// });
 
+	database.ref().on("child_added", function(snapshot) {
+		  console.log(snapshot.val().title);
+		  console.log(snapshot.val().venue);
+		  console.log(snapshot.val().restName);
+		  console.log(snapshot.val().restRate);
+		  console.log(snapshot.val().restCity);
+		  console.log(snapshot.val().restState);
+		$('tbody').append(
+			'<tr><td>' + snapshot.val().title +
+			'</td><td>' + snapshot.val().venue +
+			'</td><td>' + snapshot.val().restName +
+			'</td><td>' + snapshot.val().restRate +
+			'</td><td>' + snapshot.val().restCity + ', ' + snapshot.val().restState +
+			'</td></tr>');
+
+
+
+
+    }, function(errorObject) {
+      console.log("Errors handled: " + errorObject.code);
+    });
+
+	
 	$('#add-event').on('click', function (event) {
 		event.preventDefault();
 		
@@ -104,8 +91,8 @@ $(document).ready(function() {
 			url:"https://app.ticketmaster.com/discovery/v2/events.json?size=10&apikey=VFqKbEqAQRwPLtAKW0UynnLWlq3YTFkY",
 			async: true,				  
 			data: {
-				// radius: "5",
-				// unit: 'miles',
+				 radius: "25",
+				 unit: 'miles',
 				postalCode: eventZipInput,
 			}
 
