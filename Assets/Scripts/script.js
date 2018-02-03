@@ -22,23 +22,30 @@
 // var yelpURL = "";
 // var yelpKey = "SaHLyPn3DYzSLycjffQW8_C7YL2rAN0EJ73tUTKzuE24z5k57agTgg5fqlOCujo3pAYX14RTWmkGag4OfmrzyZuYybKKXxFjmHYgUyi8nHj3mSLrl_rohD7359dvWnYx";
 // var yelpSecret = "VA711YCfZC8tzofZWEhAVGkUOVHI0TbeddWinQzP9kAkKBrEtaRo9f9EDDGyS6oP";
+
+var eventTitleSelected;
+var eventVenueSelected;
+var restaurantNameSelected;
+var restaurantRatingSelected;
+var restaurantCitySelected;
+var restaurantStateSelected;
 	
 var corsanywhere = 'https://cors-anywhere.herokuapp.com/';
 var queryURLSearchYelp = 'https://api.yelp.com/v3/businesses/search';
 var apiKeyYelp = 'Bearer -tcLAnA2QhhU9kQ60q8FVq5k0ltA27gBPn7OJtXxqfXEFWcur_Qm-7DKZGuoM9wKAQPrYa1fDsV4yJHBSHvKdnIAZU5yAMwg_NfJXX3or92lVQQSkpvcULui1wlxWnYx';
 
-// // Initialize Firebase
-// var config = {
-// 	apiKey: "AIzaSyDNzLkz1J-tdFkbsERtH1DGNOJy-QRDXMY",
-// 	authDomain: "dinnermovieapi.firebaseapp.com",
-// 	databaseURL: "https://dinnermovieapi.firebaseio.com",
-// 	projectId: "dinnermovieapi",
-// 	storageBucket: "",
-// 	messagingSenderId: "658504571017"
-// };
-// firebase.initializeApp(config);
+ // Initialize Firebase
+ var config = {
+ 	apiKey: "AIzaSyDNzLkz1J-tdFkbsERtH1DGNOJy-QRDXMY",
+ 	authDomain: "dinnermovieapi.firebaseapp.com",
+ 	databaseURL: "https://dinnermovieapi.firebaseio.com",
+ 	projectId: "dinnermovieapi",
+ 	storageBucket: "",
+ 	messagingSenderId: "658504571017"
+ };
+ firebase.initializeApp(config);
 
-// var database = firebase.database();
+ var database = firebase.database();
 
 
 // function getsearchApi() {
@@ -153,7 +160,7 @@ $(document).ready(function() {
 				}
 				//create restaurant search button
 				$(".restaurant-search").append("<button class='btn waves-effect waves-light' id='add-restaurant' value='Next --> Restaurant Search' data-zip=" + eventZipInput + ">Next --> Restaurant Search</button>");
-			} 	
+		}
 			else { 
 				//No search results
 				$('.search-results').text("No results. Try a different Zip Code");
@@ -163,8 +170,23 @@ $(document).ready(function() {
 
 	});
 
+	$(document).on("click", ".select-event", function(event){
+		$(".alerts").empty();
+		var thisEvent = $(this);
+		$(".alerts").prepend('<div class="alert alert-primary">You Selected ' + thisEvent.attr("data-eventTitle") + ' at ' + thisEvent.attr("data-venue") + ".</div>");
+		eventTitleSelected = thisEvent.attr("data-eventTitle");
+		eventVenueSelected = thisEvent.attr("data-venue");
+//		database.ref().push({
+//			title: thisEvent.attr("data-eventTitle"),
+//			venue: thisEvent.attr("data-venue")
+////			address: thisEvent.attr("data-locationline2")
+//		});
+		console.log(thisEvent.attr("data-eventTitle"));
+		console.log(thisEvent.attr("data-venue"));
+	});
+	database.ref().on("child_added", function(snapshot) {console.log(snapshot.val().venue);});
 $(document).on("click", "#add-restaurant", function(event){
-	
+	$(".alerts").empty();
 	var restaurantZipInput = $("#add-restaurant").attr("data-zip");
 
 	//Yelp API
@@ -186,7 +208,7 @@ $(document).on("click", "#add-restaurant", function(event){
 
 		if(response.businesses){
 
-			for(i = 0; i < response.businesses.length; i++){
+			for(i = 0; i < response.businesses.length; i++) {
 				var restaurantName = response.businesses[i].name;
 				var restaurantImage = response.businesses[i].image_url;
 				var restaurantRating = response.businesses[i].rating;
@@ -198,7 +220,7 @@ $(document).on("click", "#add-restaurant", function(event){
 
 
 				var col = $('<div class="col s12 m6 l3">');
-				var card = $('<div class="card ">')
+				var card = $('<div class="card ">');
 
 				
 				var cardImg = $('<div class="card-image waves-effect waves-block waves-light"><img class="activator" src="'+restaurantImage+'" width="250px" height="250px"><span class="card-title activator">'+restaurantName+'</span></div>');
@@ -219,18 +241,51 @@ $(document).on("click", "#add-restaurant", function(event){
 				//appends the cards and select buttons to the page
 				$('.search-results').append(col.append(card.append(cardImg).append(cardContent).append(cardReveal)));
 				card.append(selectRestaurantButton);
+				
 			}
 		}
 		//gets rid of restaurant search button
 		$(".restaurant-search").empty();
+		$(".restaurant-search").append("<button class='btn waves-effect waves-light view-selections' value='view-selections'>View Selections</button>");
 		
 	});		
 });
-
+	$(document).on("click", ".select-restaurant", function(event){
+		$(".alerts").empty();
+		var thisRest = $(this);
+		$(".alerts").prepend('<div class="alert alert-primary">You Selected ' + thisRest.attr("data-restaurantName") + ' in ' + thisRest.attr("data-restaurantCity") + ".</div>");
+		restaurantNameSelected = thisRest.attr("data-restaurantName");
+		restaurantRatingSelected = thisRest.attr("data-restaurantRating");
+		restaurantCitySelected = thisRest.attr("data-restaurantCity");
+		restaurantStateSelected = thisRest.attr("data-restaurantState");
+//		database.ref().push({
+//			title: thisEvent.attr("data-eventTitle"),
+//			venue: thisEvent.attr("data-venue")
+////			address: thisEvent.attr("data-locationline2")
+//		});
+		console.log(thisRest.attr("data-restaurantName"));
+		console.log(thisRest.attr("data-restaurantCity"));
+	});
 // $("document").on("click", function() {
 // 	console.log(cardChosen);
 // 	console.log("You Got a Card");
 // 	cardsChosen.append(cardChosen);
+	$(document).on("click", ".view-selections", function() {
+		database.ref().push({
+			title: eventTitleSelected,
+			venue: eventVenueSelected,
+			restName: restaurantNameSelected,
+			restRate: restaurantRatingSelected,
+			restCity: restaurantCitySelected,
+			restState: restaurantStateSelected
+		});
+		$('.search-results').empty();
+		$(".restaurant-search").empty();
+		$(".alerts").empty();
+		
+		$(".search-results").html('<div class="col s12 m6"><div class="card blue-grey darken-1"><div class="card-content white-text"><span class="card-title">' + eventTitleSelected + '</span><p>' + eventVenueSelected + '</p></div></div></div><div class="col s12 m6"><div class="card blue-grey darken-1"><div class="card-content white-text"><span class="card-title">' + restaurantNameSelected + '</span>    <p>' + restaurantRatingSelected + '</p><p>' + restaurantCitySelected + '</p><p>' + restaurantStateSelected + '</p></div></div></div>');
+		
+	});
+	$(document).on("click", ".jumbotron", function() {});
 });
-
 // });
