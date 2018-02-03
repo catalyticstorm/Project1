@@ -1,27 +1,12 @@
 // JavaScript Document
 //===============================
 //Credits
-//Sarah Stauber: Leader, API's
+//Sarah Stauber: Leader, Jscripter
 //Anthony Knight: API's, JScripter
 //Rebecca Brown: Front-End
 //Eric Shae: JScript Compiler, Court Jesther, Booze & Snacks
 //===============================
 
-
-// var cardsChosen = [];
-
-// var currentFood = "";
-// var currentEvent = "";
-
-// //Ticketmaster API
-// var ticketmasterURL = "https://app.ticketmaster.com/discovery/v2/events.json?apikey=VFqKbEqAQRwPLtAKW0UynnLWlq3YTFkY&postalCode=02910";
-// var ticketmasterKey = "VFqKbEqAQRwPLtAKW0UynnLWlq3YTFkY";
-// var ticketmasterSecret = "X0iHZkGjS3HUf3Y1";
-
-// //Yelp API
-// var yelpURL = "";
-// var yelpKey = "SaHLyPn3DYzSLycjffQW8_C7YL2rAN0EJ73tUTKzuE24z5k57agTgg5fqlOCujo3pAYX14RTWmkGag4OfmrzyZuYybKKXxFjmHYgUyi8nHj3mSLrl_rohD7359dvWnYx";
-// var yelpSecret = "VA711YCfZC8tzofZWEhAVGkUOVHI0TbeddWinQzP9kAkKBrEtaRo9f9EDDGyS6oP";
 
 var eventTitleSelected;
 var eventVenueSelected;
@@ -128,7 +113,7 @@ $(document).ready(function() {
 					
 					// var row = $('<div class="row">')
 					var col = $('<div class="col s12 m6 l3">');
-					var card = $('<div class="card">');
+					var card = $('<div class="card small">');
 
 					// <span class="card-title activator grey-text text-darken-4">'+title+'<i class="material-icons right">more_vert</i></span>
 
@@ -170,6 +155,7 @@ $(document).ready(function() {
 		$(".alerts").prepend('<div class="alert alert-primary">You Selected ' + thisEvent.attr("data-eventTitle") + ' at ' + thisEvent.attr("data-venue") + ".</div>");
 		eventTitleSelected = thisEvent.attr("data-eventTitle");
 		eventVenueSelected = thisEvent.attr("data-venue");
+		eventVenueSelected = eventVenueSelected.replace(/^"(.*)"$/, '$1');
 //		database.ref().push({
 //			title: thisEvent.attr("data-eventTitle"),
 //			venue: thisEvent.attr("data-venue")
@@ -216,7 +202,7 @@ $(document).on("click", "#add-restaurant", function(event){
 
 
 				var col = $('<div class="col s12 m6 l3">');
-				var card = $('<div class="card ">');
+				var card = $('<div class="card small">');
 
 				
 				var cardImg = $('<div class="card-image waves-effect waves-block waves-light"><img class="activator" src="'+restaurantImage+'" width="250px" height="250px"><span class="card-title activator">'+restaurantName+'</span></div>');
@@ -254,6 +240,8 @@ $(document).on("click", "#add-restaurant", function(event){
 		restaurantRatingSelected = thisRest.attr("data-restaurantRating");
 		restaurantCitySelected = thisRest.attr("data-restaurantCity");
 		restaurantStateSelected = thisRest.attr("data-restaurantState");
+		restaurantCitySelected = restaurantCitySelected.replace(/^"(.*)"$/, '$1');
+		restaurantStateSelected = restaurantStateSelected.replace(/^"(.*)"$/, '$1');
 //		database.ref().push({
 //			title: thisEvent.attr("data-eventTitle"),
 //			venue: thisEvent.attr("data-venue")
@@ -284,4 +272,4 @@ $(document).on("click", "#add-restaurant", function(event){
 	});
 	$(document).on("click", ".jumbotron", function() {});
 });
-// });
+// str = str.replace(/^“(.*)“$/, ‘$1’);
