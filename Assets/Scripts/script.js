@@ -60,7 +60,7 @@ $(document).ready(function() {
       console.log("Errors handled: " + errorObject.code);
     });
 
-	
+	var pageNumberTicket = 0;
 	$('#add-event').on('click', function (event) {
 		event.preventDefault();
 		
@@ -68,23 +68,27 @@ $(document).ready(function() {
 		
 		var cityInput = $('#event-city-input').val().trim();
 		var stateInput = $('#event-state-input').val().trim();
+		var pageNumberTicket = 0;
+		var pageNumberRestaurants = 20;
 		
 		console.log(eventZipInput);
 		// $('#event-location-input').val('');
 		$('.search-results').empty();
 		$(".restaurant-search").empty();
 		$(".alerts").empty();
-
+	function ticketMaster () {
 		$.ajax({
 			method:"GET",
 			url:"https://app.ticketmaster.com/discovery/v2/events.json?size=10&apikey=VFqKbEqAQRwPLtAKW0UynnLWlq3YTFkY",
 			async: true,				  
 			data: {
-				 radius: "25",
-				 unit: 'miles',
+				radius: "25",
+				unit: 'miles',
 				postalCode: eventZipInput,
 				city: cityInput,
-				stateCode: stateInput
+				stateCode: stateInput,
+				page: pageNumberTicket
+
 			}
 
 		}).then(function(response2) {
@@ -137,8 +141,10 @@ $(document).ready(function() {
 
 
 				}
+				//create more results search button
+				$(".restaurant-search").append("<button class='btn waves-effect waves-light float-left' id='more-results-event' value='More Results'>More Results</button>");
 				//create restaurant search button
-				$(".restaurant-search").append("<button class='btn waves-effect waves-light' id='add-restaurant' value='Next --> Restaurant Search' data-city=" + cityInput + " data-state=" + stateInput + " data-zip=" + eventZipInput + ">Next --> Restaurant Search</button>");
+				$(".restaurant-search").append("<button class='btn waves-effect waves-light float-right' id='add-restaurant' value='Next --> Restaurant Search' data-city=" + cityInput + " data-state=" + stateInput + " data-zip=" + eventZipInput + ">Next --> Restaurant Search</button>");
 		}
 			else { 
 				//No search results
@@ -146,16 +152,26 @@ $(document).ready(function() {
 
 				}
 				});
+	} // end fun for ticketmaster
 
+	ticketMaster ();
+		// more ticketmaster results
+		$(document).on("click", '#more-results-event', function() {
+			$( "#more-results-event").remove();
+			$( "#add-restaurant").remove();
+			pageNumberTicket++;
+			ticketMaster();
+
+		})
 	});
 
 	$(document).on("click", ".select-event", function(event){
 		$(".alerts").empty();
 		var thisEvent = $(this);
+		$(".alerts").prepend('<div class="alert alert-primary">You Selected ' + thisEvent.attr("data-eventTitle") + ' at ' + thisEvent.attr("data-venue") + ".</div>");
 		eventTitleSelected = thisEvent.attr("data-eventTitle");
 		eventVenueSelected = thisEvent.attr("data-venue");
 		eventVenueSelected = eventVenueSelected.replace(/^"(.*)"$/, '$1');
-		$(".alerts").prepend('<div class="alert alert-primary">You Selected ' + thisEvent.attr("data-eventTitle") + ' at ' + eventVenueSelected + ".</div>");
 //		database.ref().push({
 //			title: thisEvent.attr("data-eventTitle"),
 //			venue: thisEvent.attr("data-venue")
@@ -170,15 +186,19 @@ $(document).on("click", "#add-restaurant", function(event){
 	var restaurantZipInput = $("#add-restaurant").attr("data-zip");
 	var restaurantCityInput = $("#add-restaurant").attr("data-city");
 	var restaurantStateInput = $("#add-restaurant").attr("data-state");
-
+	var pageNumberRestaurants = 20;
+	$('.search-results').empty();
 	//Yelp API
+	function yelpSearch () {
 	$.ajax({
 		url: "https://cors-anywhere.herokuapp.com/" + queryURLSearchYelp,
 		"crossDomain": true,
 		method: "GET",
 		data: {
 		location: restaurantCityInput + ', ' + restaurantStateInput + ' ' + restaurantZipInput,
-		term: 'restaurants'
+		term: 'restaurants',
+		limit: 20,
+		offset: pageNumberRestaurants
 		},
 		headers: {"Authorization" : apiKeyYelp}            
 
@@ -186,7 +206,7 @@ $(document).on("click", "#add-restaurant", function(event){
 		console.log("Yelp Search ");
 		console.log(response);
 
-		$('.search-results').empty();
+		// $('.search-results').empty(); move to line 190
 
 		if(response.businesses){
 
@@ -228,20 +248,35 @@ $(document).on("click", "#add-restaurant", function(event){
 		}
 		//gets rid of restaurant search button
 		$(".restaurant-search").empty();
-		$(".restaurant-search").append("<button class='btn waves-effect waves-light view-selections' value='view-selections'>View Selections</button>");
+
+		$(".restaurant-search").append("<button class='btn waves-effect waves-light more-selections float-left' value='More Restaurant'>More Restaurant</button>");
+		$(".restaurant-search").append("<button class='btn waves-effect waves-light view-selections float-right' value='view-selections'>View Selections</button>");
+		pageNumberRestaurants += response.businesses.length;
+	});
+
+	} // end yelp search fun
+	yelpSearch();
+
+	$(document).on("click", '.more-selections', function() {
 		
-	});		
+		$('more-selections').remove();
+		$('view-selections').remove();
+	yelpSearch();
+
+	});
+
+
 });
 	$(document).on("click", ".select-restaurant", function(event){
 		$(".alerts").empty();
 		var thisRest = $(this);
+		$(".alerts").prepend('<div class="alert alert-primary">You Selected ' + thisRest.attr("data-restaurantName") + ' in ' + thisRest.attr("data-restaurantCity") + ".</div>");
 		restaurantNameSelected = thisRest.attr("data-restaurantName");
 		restaurantRatingSelected = thisRest.attr("data-restaurantRating");
 		restaurantCitySelected = thisRest.attr("data-restaurantCity");
 		restaurantStateSelected = thisRest.attr("data-restaurantState");
 		restaurantCitySelected = restaurantCitySelected.replace(/^"(.*)"$/, '$1');
 		restaurantStateSelected = restaurantStateSelected.replace(/^"(.*)"$/, '$1');
-		$(".alerts").prepend('<div class="alert alert-primary">You Selected ' + thisRest.attr("data-restaurantName") + ' in ' + restaurantCitySelected + ', ' + restaurantStateSelected + ".</div>");
 //		database.ref().push({
 //			title: thisEvent.attr("data-eventTitle"),
 //			venue: thisEvent.attr("data-venue")
@@ -271,5 +306,7 @@ $(document).on("click", "#add-restaurant", function(event){
 		
 	});
 	$(document).on("click", ".jumbotron", function() {});
+
+	
 });
 // str = str.replace(/^“(.*)“$/, ‘$1’);
