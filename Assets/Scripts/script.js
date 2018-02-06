@@ -152,10 +152,10 @@ $(document).ready(function() {
 	$(document).on("click", ".select-event", function(event){
 		$(".alerts").empty();
 		var thisEvent = $(this);
-		$(".alerts").prepend('<div class="alert alert-primary">You Selected ' + thisEvent.attr("data-eventTitle") + ' at ' + thisEvent.attr("data-venue") + ".</div>");
 		eventTitleSelected = thisEvent.attr("data-eventTitle");
 		eventVenueSelected = thisEvent.attr("data-venue");
 		eventVenueSelected = eventVenueSelected.replace(/^"(.*)"$/, '$1');
+		$(".alerts").prepend('<div class="alert alert-primary">You Selected ' + thisEvent.attr("data-eventTitle") + ' at ' + eventVenueSelected + ".</div>");
 //		database.ref().push({
 //			title: thisEvent.attr("data-eventTitle"),
 //			venue: thisEvent.attr("data-venue")
@@ -235,13 +235,13 @@ $(document).on("click", "#add-restaurant", function(event){
 	$(document).on("click", ".select-restaurant", function(event){
 		$(".alerts").empty();
 		var thisRest = $(this);
-		$(".alerts").prepend('<div class="alert alert-primary">You Selected ' + thisRest.attr("data-restaurantName") + ' in ' + thisRest.attr("data-restaurantCity") + ".</div>");
 		restaurantNameSelected = thisRest.attr("data-restaurantName");
 		restaurantRatingSelected = thisRest.attr("data-restaurantRating");
 		restaurantCitySelected = thisRest.attr("data-restaurantCity");
 		restaurantStateSelected = thisRest.attr("data-restaurantState");
 		restaurantCitySelected = restaurantCitySelected.replace(/^"(.*)"$/, '$1');
 		restaurantStateSelected = restaurantStateSelected.replace(/^"(.*)"$/, '$1');
+		$(".alerts").prepend('<div class="alert alert-primary">You Selected ' + thisRest.attr("data-restaurantName") + ' in ' + restaurantCitySelected + ', ' + restaurantStateSelected + ".</div>");
 //		database.ref().push({
 //			title: thisEvent.attr("data-eventTitle"),
 //			venue: thisEvent.attr("data-venue")
