@@ -10,39 +10,46 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 	<link href="Assets/Styles/style.css" rel="stylesheet" type="text/css">
-	
+	<link href="https://fonts.googleapis.com/css?family=Josefin+Sans|Noto+Serif" rel="stylesheet">
+	<link href="Assets/Styles/style.css" rel="stylesheet" type="text/css">
 	<!-- Compiled and minified JavaScript / needs to be after jQuery.js-->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/4.9.0/firebase.js"></script>
 	<!-- Compiled Moment JS -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script> 
-	
 </head>
 
-<body>
-	<div class="container">
-		<div class="jumbotron jumbotron-fluid">
-		    <h1 class="display text-center">The Perfect Night</h1>
-		    <p class="lead text-center">Dinner and Event search</p>
+<body>	
+	<div class="container-fluid">
+		<div class="jumbotron">
+		    <h1 class="display text-center" id="headingText">The Perfect Night</h1>
+		    <p class="lead text-center serif">Dinner and Event search</p>
 		</div>
 
+	</div>
+
+	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
 				<form>
-					<div class="form-group">
+					<div class="input-field">						
 						<label for="search-zip-input">Event City</label>
-						<input class="form-control" type="text" id="event-city-input">
-						<label for="search-zip-input">State Code</label>
-						<input class="form-control" type="text" maxlength="2" id="event-state-input">
-						<label for="search-zip-input">Zip Code</label>
-						<input class="form-control" type="text" maxlength="5" id="event-zip-input">
-					<!-- <a href="searchResults.html" class="btn btn-primary" id="add-event">Search</a> -->
-					<button class="btn waves-effect waves-light" id="add-event" value="Search">Search</button>
+						<input class="form-control" type="text" id="event-city-input" autocomplete="off">
 					</div>
+					<div class="input-field">
+						<label for="search-zip-input"  class="inputText">State Code</label>
+						<input class="form-control" type="text" maxlength="2" id="event-state-input" autocomplete="off">
+					</div>
+					<div class="input-field">
+						<label for="search-zip-input"  class="inputText">Zip Code</label>
+						<input class="form-control" type="text" maxlength="5" id="event-zip-input" autocomplete="off">
+					</div>
+					<button class="btn waves-effect waves-light" id="add-event" value="Search">Search</button>
 				</form>
 			</div>
 		</div>
-	<div class="alerts"></div>
+		
+	<div class="alerts"></div>	
 		<div class="row">
 			<div class="search-results">
 				<h2 class="header">Recent Searches</h2>
@@ -67,18 +74,18 @@
 				</div>
 			</div>
 		</div>
+
 		<div class="row">
 			<div class="col-md-12 restaurant-search">
 				
 			</div>
 		</div>
 	</div>
-
-
-
-
-
-	
+	<div class="container-fluid">
+		<footer class="footer py-4 text-center">
+				<span class="text-muted">Copyright 2018</span>
+		</footer>
+	</div>	
 </body>
 	<script src="Assets/Scripts/script.js"></script>
 </html>
