@@ -164,7 +164,7 @@ $(document).ready(function() {
 	
 $(document).on("click", "#add-restaurant", function(event){
 	
-	$(".alerts").empty();
+	Materialize.Toast.removeAll();
 	var restaurantZipInput = $("#add-restaurant").attr("data-zip");
 	var restaurantCityInput = $("#add-restaurant").attr("data-city");
 	var restaurantStateInput = $("#add-restaurant").attr("data-state");
@@ -263,6 +263,7 @@ $(document).on("click", "#add-restaurant", function(event){
 	});
 
 	$(document).on("click", ".view-selections", function() {
+		Materialize.Toast.removeAll();
 		database.ref().push({
 			title: eventTitleSelected,
 			venue: eventVenueSelected,
