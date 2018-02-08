@@ -35,25 +35,22 @@ var apiKeyYelp = 'Bearer -tcLAnA2QhhU9kQ60q8FVq5k0ltA27gBPn7OJtXxqfXEFWcur_Qm-7D
 
 
 
-$(document).ready(function() { 
+$(document).ready(function() {
 
-
-	database.ref().on("child_added", function(snapshot) {
+	database.ref().limitToLast(10).on("child_added", function(snapshot) {
 		  console.log(snapshot.val().title);
 		  console.log(snapshot.val().venue);
 		  console.log(snapshot.val().restName);
 		  console.log(snapshot.val().restRate);
 		  console.log(snapshot.val().restCity);
 		  console.log(snapshot.val().restState);
-		$('tbody').append(
+		$('tbody').prepend(
 			'<tr><td>' + snapshot.val().title +
 			'</td><td>' + snapshot.val().venue +
 			'</td><td>' + snapshot.val().restName +
 			'</td><td>' + snapshot.val().restRate +
 			'</td><td>' + snapshot.val().restCity + ', ' + snapshot.val().restState +
 			'</td></tr>');
-
-
 
 
     }, function(errorObject) {
@@ -121,7 +118,7 @@ $(document).ready(function() {
 
 					// <span class="card-title activator grey-text text-darken-4">'+title+'<i class="material-icons right">more_vert</i></span>
 
-					var cardImg = $('<div class="card-image waves-effect waves-block waves-light"><img class="activator" src="'+image+'" width="250px" height="250px"><span class="card-title">'+title+'</span></div>');
+					var cardImg = $('<div class="card-image waves-effect waves-block waves-light"><img class="activator" src="'+image+'" width="250px" height="250px"><span class="card-title titleCard activator">'+title+'</span></div>');
 					var cardContent = $('<div class="card-content"><span class="activator grey-text text-darken-4"><i class="material-icons right">more_vert</i></span><p>'+venues+'</p><p>'
 							+locationCity+ ', ' + locationState + '</p><p>'+date+' '+time+'</p><div>');
 
@@ -138,8 +135,6 @@ $(document).ready(function() {
 					$('.search-results').append(col.append(card.append(cardImg).append(cardContent).append(cardReveal)));
 					card.append(selectEventButton);
 
-
-
 				}
 				//create more results search button
 				$(".restaurant-search").append("<button class='btn waves-effect waves-light float-left' id='more-results-event' value='More Results'>More Results</button>");
@@ -147,8 +142,8 @@ $(document).ready(function() {
 				$(".restaurant-search").append("<button class='btn waves-effect waves-light float-right' id='add-restaurant' value='Next --> Restaurant Search' data-city=" + cityInput + " data-state=" + stateInput + " data-zip=" + eventZipInput + ">Next --> Restaurant Search</button>");
 		}
 			else { 
-				//No search results
-				$('.search-results').text("No results. Try a different Zip Code");
+					//No search results
+					$('.search-results').text("No results. Try a different City, State or Zip Code");
 
 				}
 				});
@@ -168,7 +163,13 @@ $(document).ready(function() {
 	$(document).on("click", ".select-event", function(event){
 		$(".alerts").empty();
 		var thisEvent = $(this);
-		$(".alerts").prepend('<div class="alert alert-primary">You Selected ' + thisEvent.attr("data-eventTitle") + ' at ' + thisEvent.attr("data-venue") + ".</div>");
+		
+		eventTitleSelected = thisEvent.attr("data-eventTitle");
+		eventVenueSelected = thisEvent.attr("data-venue");
+		eventVenueSelected = eventVenueSelected.replace(/^"(.*)"$/, '$1');
+
+		Materialize.toast('You Selected ' + eventTitleSelected + ' at ' + eventVenueSelected + '.', 4000);
+		// $(".alerts").prepend('<div class="alert alert-primary">You Selected ' + thisEvent.attr("data-eventTitle") + ' at ' + thisEvent.attr("data-venue") + ".</div>");
 		eventTitleSelected = thisEvent.attr("data-eventTitle");
 		eventVenueSelected = thisEvent.attr("data-venue");
 		eventVenueSelected = eventVenueSelected.replace(/^"(.*)"$/, '$1');
@@ -186,7 +187,7 @@ $(document).on("click", "#add-restaurant", function(event){
 	var restaurantZipInput = $("#add-restaurant").attr("data-zip");
 	var restaurantCityInput = $("#add-restaurant").attr("data-city");
 	var restaurantStateInput = $("#add-restaurant").attr("data-state");
-	var pageNumberRestaurants = 20;
+	 pageNumberRestaurants = 20;
 	$('.search-results').empty();
 	//Yelp API
 	function yelpSearch () {
@@ -195,10 +196,10 @@ $(document).on("click", "#add-restaurant", function(event){
 		"crossDomain": true,
 		method: "GET",
 		data: {
-		location: restaurantCityInput + ', ' + restaurantStateInput + ' ' + restaurantZipInput,
-		term: 'restaurants',
-		limit: 20,
-		offset: pageNumberRestaurants
+			location: restaurantCityInput + ', ' + restaurantStateInput + ' ' + restaurantZipInput,
+			term: 'restaurants',
+			limit: 20,
+			offset: pageNumberRestaurants
 		},
 		headers: {"Authorization" : apiKeyYelp}            
 
@@ -225,7 +226,7 @@ $(document).on("click", "#add-restaurant", function(event){
 				var card = $('<div class="card small">');
 
 				
-				var cardImg = $('<div class="card-image waves-effect waves-block waves-light"><img class="activator" src="'+restaurantImage+'" width="250px" height="250px"><span class="card-title activator">'+restaurantName+'</span></div>');
+				var cardImg = $('<div class="card-image waves-effect waves-block waves-light"><img class="activator" src="'+restaurantImage+'" width="250px" height="250px"><span class="card-title titleCard activator">'+restaurantName+'</span></div>');
 				var cardContent = $('<div class="card-content"><span class="activator"><i class="material-icons right">more_vert</i></span><p>Rating: '+restaurantRating+
 					' out of 5 Stars</p><p>'+restaurantCity+', '+restaurantState+ '</p><div>');
 
@@ -270,20 +271,19 @@ $(document).on("click", "#add-restaurant", function(event){
 	$(document).on("click", ".select-restaurant", function(event){
 		$(".alerts").empty();
 		var thisRest = $(this);
-		$(".alerts").prepend('<div class="alert alert-primary">You Selected ' + thisRest.attr("data-restaurantName") + ' in ' + thisRest.attr("data-restaurantCity") + ".</div>");
+
 		restaurantNameSelected = thisRest.attr("data-restaurantName");
 		restaurantRatingSelected = thisRest.attr("data-restaurantRating");
 		restaurantCitySelected = thisRest.attr("data-restaurantCity");
 		restaurantStateSelected = thisRest.attr("data-restaurantState");
 		restaurantCitySelected = restaurantCitySelected.replace(/^"(.*)"$/, '$1');
 		restaurantStateSelected = restaurantStateSelected.replace(/^"(.*)"$/, '$1');
-//		database.ref().push({
-//			title: thisEvent.attr("data-eventTitle"),
-//			venue: thisEvent.attr("data-venue")
-////			address: thisEvent.attr("data-locationline2")
-//		});
-		console.log(thisRest.attr("data-restaurantName"));
-		console.log(thisRest.attr("data-restaurantCity"));
+
+		Materialize.toast('You Selected ' + restaurantNameSelected + ' in ' + restaurantCitySelected + ', '+ restaurantStateSelected +'.' , 4000);
+		
+		//Materialize.toast('You Selected ' + thisRest.attr("data-restaurantName") + ' in ' + thisRest.attr("data-restaurantCity") + ', '+thisRest.attr("data-restaurantState")+'.' , 4000);
+		//$(".alerts").prepend('<div class="alert alert-primary">You Selected ' + thisRest.attr("data-restaurantName") + ' in ' + thisRest.attr("data-restaurantCity") + ".</div>");
+
 	});
 // $("document").on("click", function() {
 // 	console.log(cardChosen);
@@ -302,11 +302,12 @@ $(document).on("click", "#add-restaurant", function(event){
 		$(".restaurant-search").empty();
 		$(".alerts").empty();
 		
-		$(".search-results").html('<div class="col s12 m6"><div class="card blue-grey darken-1"><div class="card-content white-text"><span class="card-title">' + eventTitleSelected + '</span><p>' + eventVenueSelected + '</p></div></div></div><div class="col s12 m6"><div class="card blue-grey darken-1"><div class="card-content white-text"><span class="card-title">' + restaurantNameSelected + '</span>    <p>' + restaurantRatingSelected + '</p><p>' + restaurantCitySelected + '</p><p>' + restaurantStateSelected + '</p></div></div></div>');
 		
+		$(".search-results").append('<div class="col s12"><h2 class="header">ENJOY !</h2></div>');
+		$(".search-results").append('<div class="col s12 m6"><div class="card blue-grey darken-1"><div class="card-content white-text"><span class="card-title">' + eventTitleSelected + '</span><p>' + eventVenueSelected + '</p></div></div></div><div class="col s12 m6"><div class="card blue-grey darken-1"><div class="card-content white-text"><span class="card-title">' + restaurantNameSelected + '</span>    <p>Rating: ' + restaurantRatingSelected + ' out of 5</p><p>' + restaurantCitySelected + ', '+restaurantStateSelected+'</p></div></div></div>');
+		$(".search-results").append('<iframe src="https://giphy.com/embed/3oFzmjrFPw5vuArQSQ" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/budlight-bud-light-dilly-3oFzmjrFPw5vuArQSQ">via GIPHY</a></p>')
 	});
-	$(document).on("click", ".jumbotron", function() {});
+	$(document).on("click", ".jumbotron", function() {location.reload();});
 
 	
 });
-// str = str.replace(/^“(.*)“$/, ‘$1’);
