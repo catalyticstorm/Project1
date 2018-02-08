@@ -152,6 +152,7 @@ $(document).ready(function() {
 		eventVenueSelected = thisEvent.attr("data-venue");
 		eventVenueSelected = eventVenueSelected.replace(/^"(.*)"$/, '$1');
 		eventUrlSelected = thisEvent.attr("data-eventUrl");
+		eventUrlSelected = eventUrlSelected.replace(/^"(.*)"$/, '$1');
 		eventLatSelected = thisEvent.attr("data-lat");
 		eventLongSelected = thisEvent.attr("data-long");
 		eventLatSelected = eventLatSelected.replace(/^"(.*)"$/, '$1');
